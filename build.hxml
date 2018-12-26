@@ -1,0 +1,4 @@
+-lib thx.semver
+-main ArpPublish
+-neko arp_publish.n
+--cmd nekotools boot arp_publish.n
