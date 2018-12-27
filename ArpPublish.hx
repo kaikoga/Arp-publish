@@ -17,6 +17,8 @@ class ArpPublish {
 	static function main() {
 		args = Sys.args();
 		switch (args.shift()) {
+			case "cleanup":
+				cleanupMain();
 			case "publish":
 				publishMain();
 			case "version":
@@ -96,6 +98,21 @@ class ArpPublish {
 		}
 	}
 
+	static function cleanupMain() {
+		readDefaults();
+
+		for (haxelib in haxelibs) {
+			var wd = Sys.getCwd();
+			Sys.setCwd(FileSystem.fullPath('../$haxelib'));
+			var haxelibDef:HaxelibDef = Json.parse(File.getContent("haxelib.json"));
+			var haxelibName = haxelibDef.name;
+			var haxelibZip = '$haxelibName.zip';
+			Sys.command('rm -f $haxelibZip');
+			Sys.command("find . -name .DS_Store -delete");
+			Sys.setCwd(wd);
+		}
+	}
+
 	static function updateDeps(version:String) {
 		for (haxelib in haxelibs) {
 			var haxelibPath = '../$haxelib/haxelib.json';
@@ -108,7 +125,7 @@ class ArpPublish {
 	}
 
 	static function publishMain() {
-		readDefaults();
+		cleanupMain();
 
 		updateDeps(version);
 		for (haxelib in haxelibs) {
@@ -117,7 +134,6 @@ class ArpPublish {
 			var haxelibDef:HaxelibDef = Json.parse(File.getContent("haxelib.json"));
 			var haxelibName = haxelibDef.name;
 			var haxelibZip = '$haxelibName.zip';
-			Sys.command('rm -f $haxelibZip');
 			Sys.command("haxe haxelib.hxml");
 			Sys.stdout().writeString('publish $haxelib as $haxelibName\n');
 			var command = 'haxelib submit $haxelibZip $haxelibPassword --always';
