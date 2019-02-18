@@ -145,7 +145,7 @@ class ArpPublish {
 
 			Sys.setCwd(wd);
 		}
-		updateDeps("dev");
+		updateDeps("");
 
 		if (haxelibPassword == null) die('please set HAXELIB_PASSWORD');
 	}
