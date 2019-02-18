@@ -22,8 +22,11 @@ class ArpPublish {
 			case "publish":
 				publishMain();
 			case "version":
-			case _:
 				versionMain();
+			case _:
+				Sys.stderr.writeString("usage: arp_publish cleanup\n")
+				Sys.stderr.writeString("       arp_publish version\n")
+				Sys.stderr.writeString("       arp_publish publish\n")
 		}
 	}
 
